@@ -1,16 +1,28 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 function SortPopup() {
 
     const [activePopup, setActivePopup] = useState(false);
+    const sortRef = useRef()
 
-    const activate = () => {
+    const togglePopup = () => {
         setActivePopup(!activePopup)
     }
 
+    const handleOutsideClick = (e) => {
+        console.log(e.composedPath())
+        if(!e.composedPath().includes(sortRef.current)) {
+            setActivePopup(false)
+        }
+    }
+
+    useEffect(() => {
+      document.body.addEventListener('click', handleOutsideClick)
+        console.log(sortRef.current)
+    }, [])
 
     return (
-        <div className="sort">
+        <div ref={sortRef} className="sort">
             <div className="sort__label">
                 <svg
                     width="10"
@@ -25,7 +37,7 @@ function SortPopup() {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={activate}>популярности</span>
+                <span onClick={togglePopup}>популярности</span>
             </div>
             {activePopup
                 ? <div className="sort__popup">
